@@ -1,0 +1,14 @@
+alter user SRCOPERF  account unlock;
+
+ALTER USER AH03285 IDENTIFIED BY Pdnq9685$ ;
+
+Select username, password_change_date, account_status, a.*  from dba_users a where username = 'SPSMDMRW';
+
+Select username, password_change_date, account_status, last_login, lock_date, expiry_date  from dba_users where account_statUs  = 'OPEN' and username like 'SPS_DRE_PROD%';;
+
+Select username, password_change_date, account_status, last_login, lock_date, expiry_date  from dba_users where  
+username in  ('SPSR6WGSCLM','SRCSPSMDREAD','SVCSPSODSRWP') ;
+
+Select username, password_change_date, account_status  from dba_users where account_statUs  <> 'OPEN'  order by password_change_date desc;
+
+Select *  from dba_users;
