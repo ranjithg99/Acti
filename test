@@ -1,0 +1,91 @@
+
+SELECT query_data.*
+  FROM (SELECT DISTINCT rp.mstr_prov_id           AS org_mstr_prov_id,
+                        rp.prov_org_fed_tax_id    AS tin,
+                        rp.npi                    AS org_npi,
+                        rp.prov_org_spclty_cd     AS org_spclty,
+                        CASE
+                            WHEN n.rgnl_ntwk_id IN ('000000108',
+                                                    '000000109',
+                                                    '000000110',
+                                                    '000000111',
+                                                    '000000141',
+                                                    'TTA000141')
+                            THEN
+                                'ACES'
+                            ELSE
+                                n.ntwk_ownr_cd
+                        END                       AS ntwk_ownr_cd
+          FROM SPSOWNER.PROV  p
+               INNER JOIN SPSOWNER.RLTD_PADRS r
+                   ON     r.RLTD_MSTR_PROV_ID = p.MSTR_PROV_ID
+                      AND r.PRL_TYPE_CD = '1918'
+                      AND r.RLTD_PADRS_TRMNTN_DT > CURRENT_DATE
+               INNER JOIN SPSOWNER.PROV rp
+                   ON     rp.MSTR_PROV_ID = r.MSTR_PROV_ID
+                      AND rp.PROV_TRMNTN_DT > CURRENT_DATE
+                      AND rp.PROV_CTGRY_CD = '182'
+               INNER JOIN SPSOWNER.RLTD_PADRS_NTWK rn
+                   ON     rn.RLTD_PADRS_KEY = r.RLTD_PADRS_KEY
+                      AND rn.RLTD_PADRS_NTWK_TRMNTN_DT > CURRENT_DATE
+               INNER JOIN SPSOWNER.POA_NTWK poan
+                   ON     poan.POA_NTWK_KEY = rn.POA_NTWK_KEY
+                      AND poan.POA_NTWK_TRMNTN_DT > CURRENT_DATE
+               INNER JOIN SPSOWNER.PROV_ORG_NTWK pon
+                   ON     pon.PROV_ORG_NTWK_KEY = poan.PROV_ORG_NTWK_KEY
+                      AND pon.PROV_ORG_NTWK_TRMNTN_DT > CURRENT_DATE
+               INNER JOIN SPSOWNER.NTWK n
+                   ON     n.NTWK_KEY = pon.NTWK_KEY
+                      AND n.NTWK_TRMNTN_DT > CURRENT_DATE
+                      AND n.PROV_DATA_OWNR_CD = p.PROV_DATA_OWNR_CD
+                      AND n.PARG_NTWK_IND = 'Y'
+         WHERE     p.PROV_DATA_OWNR_CD IN ('ANTHEM',
+                                           'LACAID',
+                                           'BCBSWNY',
+                                           'GACAID',
+                                           'OHCAID',
+                                           'VAMES')
+               AND p.prov_ctgry_cd = '181'
+               AND p.prov_trmntn_dt > CURRENT_DATE) query_data
+WHERE (   ((query_data.org_mstr_prov_id IN ('1102803629',
+                                             '1100202066',
+                                             '1102825998',
+                                             '1103051112',
+                                             '1103327883',
+                                             '1102826484',
+                                             '1103600342',
+                                             '1103733055',
+                                             '1000083170',
+                                             '1102713267',
+                                             '1102824940',
+                                             '1102988649',
+                                             '1102207575',
+                                             '1101668354',
+                                             '1102381322',
+                                             '1102554972',
+                                             '1102408052',
+                                             '1000082361',
+                                             '1102945252',
+                                             '1103780271',
+                                             '1102799970',
+                                             '1104593602',
+                                             '1103529592',
+                                             '1100158312',
+                                             '1102825427',
+                                             '1102824689',
+                                             '1103056262',
+                                             '1000062976')))
+        OR (    ((query_data.org_npi IN
+                      ('1548212988', '1891820668', '1083971204')))
+            AND ((query_data.tin IN ('330571188',
+                                     '202605791',
+                                     '310936303',
+                                     '311166754',
+                                     '330938349',
+                                     '310833936',
+                                     '362805852',
+                                     '453344111')))));
+
+Thanks
+Ranjith
+
